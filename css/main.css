@@ -1,0 +1,23 @@
+#zakon
+{
+    font-weight: bold;
+    color: red;
+}
+
+.class-selector
+{
+    background-color: blueviolet;
+}
+
+.poseben
+{
+    background-color: greenyellow;
+}
+
+li
+{
+    background-color: pink; 
+    margin: 5px;
+    border-radius: 15px;
+    padding: 10px;
+}
