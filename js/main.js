@@ -10,10 +10,12 @@ function main() {
 
   const fov = 75;
   const aspect = 2;  // the canvas default
+  var frustumSize = 60;
   const near = 0.5;
   const far = 10;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.z = 2;
+  //const camera = new THREE.OrthographicCamera(-3 , 3 , 3 , -3, 2, 5);
+  camera.position.z = 3;
 
   const scene = new THREE.Scene();
 
@@ -69,15 +71,17 @@ function main() {
   }, 200);
 
   
-  let scalingStep = 0.01;
+  let scalingStep = 0.02;
 
   function render(time) {
     time *= 0.001;  // convert time to seconds
 
-    cubeArray.forEach(cube => {
-      cube.rotation.y = time + cube.position.y * 300;
-      cube.rotation.x = time;
-    });
+    // camera.rotation.y += Math.PI/260; 
+
+    // cubeArray.forEach(cube => {
+    //   cube.rotation.y = time + cube.position.y * 300;
+    //   cube.rotation.x = time;
+    // });
 
     // 
     //cube.rotation.z = time;
@@ -86,9 +90,11 @@ function main() {
     // cube.scale.y += scalingStep;
     // cube.scale.z += scalingStep;
 
-    // if(cube.scale.x >= 1.2 || cube.scale.x <= 0.8){
-    //     scalingStep = scalingStep * -1;
-    // }
+    camera.position.x += scalingStep;
+
+    if(camera.position.x >= 2 || camera.position.x <= -2){
+        scalingStep = scalingStep * -1;
+    }
 
     renderer.render(scene, camera);
 
