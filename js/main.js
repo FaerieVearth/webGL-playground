@@ -6,7 +6,7 @@ function main() {
   const canvas = document.querySelector('#c');
   canvas.width = innerWidth;
   canvas.height = innerHeight;
-  const renderer = new THREE.WebGLRenderer({canvas});
+  const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
 
   const fov = 75;
   const aspect = 2;  // the canvas default
@@ -14,10 +14,12 @@ function main() {
   const far = 10;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   //const camera = new THREE.OrthographicCamera(-3 , 3 , 3 , -3, 2, 5);
-  camera.position.z = 3;
+  camera.position.z = 2;
 
   let raycaster = new THREE.Raycaster();
   let mouse = new THREE.Vector2();
+
+  let activeCubeArray = [];
 
   mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -53,6 +55,40 @@ function main() {
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
 
+  function onMouseUp( event ) {
+    event.preventDefault();
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    console.log(mouse.x, mouse.y);
+
+    raycaster.setFromCamera( mouse, camera );
+    
+    // if (selectedObject){
+    //   selectedObject.material.color.set( '#44aa88');
+    //   selectedObject = null;
+    // }
+
+    var intersects = raycaster.intersectObjects( cubeArray );
+ 
+    if (intersects.length > 0) {
+      console.log()
+      if (activeCubeArray.lastIndexOf(intersects[0].object) != -1){
+        //izklopi rotacijo oz odstrani iz arraya
+        intersects[0].object.material.color.set( '#44aa88');
+        activeCubeArray.splice(activeCubeArray.indexOf(intersects[0].object), 1);
+      }else{
+        //vklopi rotacijo oz dodaj v array
+        activeCubeArray.push(intersects[0].object);
+      }
+
+      // console.log(activeCubeArray);
+      // selectedObject = intersects[0].object;
+      // selectedObject.rotation.x += 0.02;
+      // selectedObject.rotation.y += 0.02;
+      // selectedObject.material.color.set( '#ff0000' );
+    }
+  }
+
   function addAllCubes(){
     for(let x = 0; x < 6; x++){
       for(let y = 0; y < 6; y++){
@@ -82,24 +118,29 @@ function main() {
 
   
   function render(time) {
-    raycaster.setFromCamera( mouse, camera );
     time *= 0.001;  // convert time to seconds
 
+    raycaster.setFromCamera( mouse, camera );
     
-
     if (selectedObject){
       selectedObject.material.color.set( '#44aa88');
       selectedObject = null;
     }
 
     var intersects = raycaster.intersectObjects( cubeArray );
- 
-    if (intersects.length > 0) {
-      selectedObject = intersects[0].object;
-      selectedObject.rotation.x += 0.02;
-      selectedObject.rotation.y += 0.02;
-      selectedObject.material.color.set( '#ff0000' );
-    }
+    
+    activeCubeArray.forEach(element => {
+      // element.rotation.x += 0.02;
+      element.rotation.y += 0.02;
+      element.material.color.set( '#ff0000' );
+    });
+
+    // if (intersects.length > 0) {
+    //   selectedObject = intersects[0].object;
+    //   selectedObject.rotation.x += 0.02;
+    //   selectedObject.rotation.y += 0.02;
+    //   selectedObject.material.color.set( '#ff0000' );
+    // }
 
     // camera.rotation.y += Math.PI/260; 
 
@@ -128,20 +169,21 @@ function main() {
 
   addAllCubes();
 
-  // cubeArray.forEach(element => {
-  //   scene.add(element);
-  // });
+  cubeArray.forEach(element => {
+    scene.add(element);
+  });
   
-  let a = setInterval(function(){
-    scene.add(cubeArray[cubeIndex++]);
-    if(cubeIndex == cubeArray.length){
-      clearInterval(a);
-    }
-  }, 100);
+  // let a = setInterval(function(){
+  //   scene.add(cubeArray[cubeIndex++]);
+  //   if(cubeIndex == cubeArray.length){
+  //     clearInterval(a);
+  //   }
+  // }, 100);
 
   render();
   window.addEventListener( 'resize', onWindowResize, false );
   window.addEventListener( 'mousemove', onMouseMove, false );
+  window.addEventListener( 'mouseup', onMouseUp, false );
 }
 
 
