@@ -1,23 +1,32 @@
-#zakon
-{
-    font-weight: bold;
-    color: red;
+.colorDisplay{
+    position: fixed;
+    height: 200px;
+    width: 200px;
+    left: 100px;
+    border-style: solid;
+    border-color: #857070;
+    border-width: 2px;
 }
 
-.class-selector
-{
-    background-color: blueviolet;
+
+#color1{
+    top: 100px;
 }
 
-.poseben
-{
-    background-color: greenyellow;
+#color2{
+    top: 330px;
 }
 
-li
-{
-    background-color: pink; 
-    margin: 5px;
-    border-radius: 15px;
-    padding: 10px;
+#color3{
+    top: 560px;
 }
+
+#nextFrame{
+    position: fixed;
+    height: 240px;
+    width: 240px;
+    top: 540px;
+    left: 80px;
+    background-color: gold;
+}
+
